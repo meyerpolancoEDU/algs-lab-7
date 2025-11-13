@@ -1,3 +1,6 @@
+from typing import Any
+
+
 from collections import defaultdict
 
 def make_undirected_graph(edge_list):
@@ -17,19 +20,21 @@ def reachable(graph, start_node):
     result = set([start_node])
     frontier = set([start_node])
     while len(frontier) != 0:
-        ###TODO
-        pass
-    return result
+        current = frontier.pop()
+        for neighbor in graph[current]:
+            if neighbor not in result:
+                result.add(neighbor)
+                frontier.add(neighbor)
+    return list(result)
 
 
 
 
 
 def connected(graph):
-    ### TODO
-    pass
-
-
+    start_node = list(graph.keys())[0]
+    reachable_nodes = reachable(graph, start_node)
+    return len(reachable_nodes) == len(graph)
 
 
 def n_components(graph):
@@ -37,6 +42,11 @@ def n_components(graph):
     Returns:
       the number of connected components in an undirected graph
     """
-    ### TODO
-    pass
-
+    result = 0
+    remaining_nodes = set(graph.keys())
+    while len(remaining_nodes) > 0:
+        start_node = remaining_nodes.pop()
+        reachable_nodes = reachable(graph, start_node)
+        result += 1
+        remaining_nodes -= set(reachable_nodes)
+    return result
